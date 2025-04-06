@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { Keypair } from "@solana/web3.js";
+import base58 from "bs58";
 
 let privateKey = process.env["SECRET_KEY"];
 if (privateKey === undefined) {
@@ -10,6 +11,7 @@ const asArray = Uint8Array.from(JSON.parse(privateKey));
 const keypair = Keypair.fromSecretKey(asArray);
 
 console.log(`Public key: ${keypair.publicKey.toBase58()}`);
+console.log(`Private key: ${base58.encode(keypair.secretKey) }`);
 
 /*
 # Run

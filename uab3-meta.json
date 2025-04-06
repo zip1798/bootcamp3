@@ -1,0 +1,15 @@
+{
+    "name": "Solana UA Bootcamp 2025-03-19 ZIP1798",
+    "symbol": "UAB3",
+    "description": "Example Token for Solana UA Bootcamp 2025-03-19 ZIP1798",
+    "image": "https://teal-naval-condor-252.mypinata.cloud/ipfs/bafkreiberkk3he7zog5saum24owqn46qsktzrxatum2s4uczc5yhxc44hy",
+    "attributes": [],
+    "properties": {
+      "files": [
+        {
+          "uri": "https://teal-naval-condor-252.mypinata.cloud/ipfs/bafkreiberkk3he7zog5saum24owqn46qsktzrxatum2s4uczc5yhxc44hy",
+          "type": "image/png"
+        }
+      ]
+    }
+  }
