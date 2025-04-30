@@ -21,7 +21,9 @@ const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
 const tokenMintAccount = new PublicKey(mintPublicKey);
 
-const recipientAssociatedTokenAccount = new PublicKey("HRgyNHxdiiW5regVC3CUi5ZJhmG7BKXiLCR5DLJkQK9Q");
+
+const recipientAssociatedTokenAccount = new PublicKey("G75b3oSAasBjFcTAVWoVpJyZLrUE7VMw8FbJRUStMtui");
+// const recipientAssociatedTokenAccount = new PublicKey("HRgyNHxdiiW5regVC3CUi5ZJhmG7BKXiLCR5DLJkQK9Q");
   
   const transactionSignature = await mintTo(
     connection,

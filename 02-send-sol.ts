@@ -40,7 +40,7 @@ const memoProgram = new PublicKey(
     "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
 );
   
-const memoText = "Hello from Solana!";
+const memoText = "Tnis is new text of MEMO!";
   
 const addMemoInstruction = new TransactionInstruction({
   keys: [{ pubkey: sender.publicKey, isSigner: true, isWritable: true }],
