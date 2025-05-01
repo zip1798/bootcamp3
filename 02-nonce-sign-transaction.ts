@@ -4,6 +4,7 @@ import {
     mintTo, 
     getOrCreateAssociatedTokenAccount, 
     transfer, 
+    createMint, 
     createTransferCheckedInstruction 
 } from "@solana/spl-token";
 import "dotenv/config";
@@ -19,8 +20,11 @@ import {
   Keypair,
   SystemProgram,
   NonceAccount,
+  LAMPORTS_PER_SOL,
   NONCE_ACCOUNT_LENGTH 
 } from "@solana/web3.js";
+import {sleep, sleepAsync} from "./utils";
+
 const connection = new Connection(clusterApiUrl("devnet"));
 
 // Our token has two decimal places
@@ -37,10 +41,20 @@ const sender = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(process.env["SEC
 const recipient = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(process.env["SECRET_KEY2"]||'')));
 const nonceKeypair = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(process.env["NONCE_ACCOUNT_KEY"]||'')));
 
-const mintPublicKey = new PublicKey(
-  "EuEFLK2sBJhFjGe2LWC8aE4WbWQcS38N3rdg73aSw2gb"
+// Create token mint account 
+const mintPublicKey: PublicKey = await createMint(
+    connection,
+    sender,
+    sender.publicKey,
+    null,
+    2
 );
 
+const link_create_mint = getExplorerLink("address", mintPublicKey.toString(), "devnet");
+console.log(`✅ Token Mint: ${link_create_mint}`);
+console.log(`Token Mint Address: ${mintPublicKey.toString()}`);
+
+await sleepAsync(5000);
 
 // Get Nonce Account 
 let nonceAccount: NonceAccount | null = null;
@@ -56,6 +70,7 @@ if (nonceAccount === null) {
 console.log('Nonce Account: ', nonceKeypair.publicKey.toBase58());
 console.log('Nonce: ', nonceAccount.nonce);
 
+await sleepAsync(5000);
 
 // get sender token account
 const senderTokenAccount = await getOrCreateAssociatedTokenAccount(
@@ -75,7 +90,7 @@ const transactionSignature = await mintTo(
     TRANSFER_AMOUNT
 );
 const linkMint = getExplorerLink("transaction", transactionSignature, "devnet");
-console.log(`✅ Success! Mint Transaction: ${linkMint}\n`);
+console.log(`\n✅ Success! Mint Transaction: ${linkMint}\n`);
 
 // get recipient token account
 const recipientTokenAccount = await getOrCreateAssociatedTokenAccount(
@@ -112,14 +127,22 @@ const serializedTransaction = transaction.serialize({
   requireAllSignatures: false,
 });
 const transactionBase64 = serializedTransaction.toString("base64");
-console.log(`Partial Sign Transaction: ${transactionBase64}\n\n`);
+console.log(`Partial Sign Transaction: ${transactionBase64}\n`);
 
-console.log("Start sleep for 120sec\n");
-await new Promise(resolve => setTimeout(resolve, 120000));
-console.log("End sleep for 120sec\n");
+console.log("Start sleep for 120sec "+(new Date().toLocaleString()));
+await sleepAsync(120000);
+console.log("End sleep for 120sec "+(new Date().toLocaleString()));
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Recipient part of the transaction
+
+
+// Get solana balances of sender and recipient
+const senderBalance = await connection.getBalance(sender.publicKey);
+const recipientBalance = await connection.getBalance(recipient.publicKey);
+console.log('\n💰 Solana balances before transfer:');
+console.log(`Sender ${sender.publicKey.toBase58()} balance: ${senderBalance / LAMPORTS_PER_SOL} SOL`);
+console.log(`Recipient ${recipient.publicKey.toBase58()} balance: ${recipientBalance / LAMPORTS_PER_SOL} SOL \n`);
 
 // Deserialize the transaction
 const recoveredTransaction = Transaction.from(
@@ -133,12 +156,15 @@ const recoveredTransactionSignature = await connection.sendRawTransaction(
 
 const linkRecoveredTransactionSignature = getExplorerLink("transaction", recoveredTransactionSignature, "devnet");
 console.log(`✅ Success! Partial Transfer Transaction: ${linkRecoveredTransactionSignature}`);
+console.log(`💰 Sent ${TRANSFER_AMOUNT / MINOR_UNITS_PER_MAJOR_UNITS} tokens (${mintPublicKey.toString()}) from ${sender.publicKey.toBase58()} to ${recipient.publicKey.toBase58()}`);
+await sleepAsync(60000);  
 
+const senderPostBalance = await connection.getBalance(sender.publicKey);
+const recipientPostBalance = await connection.getBalance(recipient.publicKey);
+console.log('\n💰 Solana balances after transfer:');
+console.log(`Sender ${sender.publicKey.toBase58()} balance: ${senderPostBalance / LAMPORTS_PER_SOL} SOL`);
+console.log(`Recipient ${recipient.publicKey.toBase58()}  balance: ${recipientPostBalance / LAMPORTS_PER_SOL} SOL`);
 
-/**
- * Result of execution:
- * 
- */
 
 async function createNonceAccount(payer: Keypair, auth: Keypair, nonceAccount: Keypair ) {
     let tx = new Transaction();
