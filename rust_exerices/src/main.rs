@@ -13,6 +13,8 @@ use solana_sdk::{
 pub mod token;
 use token::*;
 
+pub mod utils;
+
 #[tokio::main]
 async fn main() {
     generate_keypair();
