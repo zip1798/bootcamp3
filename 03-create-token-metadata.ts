@@ -24,7 +24,7 @@ const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
 );
   
 const tokenMintAccount = new PublicKey(mintPublicKey);
-  
+
 const metadataData = {
     name: "Solana UA Bootcamp 250319",
     symbol: "UAB-3",
