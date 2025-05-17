@@ -10,6 +10,7 @@ rand = "0.8"
 dotenvy = "0.15"
 tokio = { version = "1", features = ["full"] }  # For async support
 spl-token = "3.5.0"
+spl-token-2022 = "0.8.0" # For SPL Token 2022
 mpl-token-metadata = "4.1.2"
 spl-associated-token-account = "2.3.0"
 solana-program = "1.18.22"

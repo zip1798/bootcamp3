@@ -1,4 +1,4 @@
-use bootcamp3::utils::*;
+use bootcamp3::utils2022::*;
 use solana_sdk::signer::Signer;
 use solana_sdk::signer::keypair::Keypair;
 use solana_sdk::pubkey::Pubkey;
@@ -25,7 +25,7 @@ async fn main() {
     process_transaction_result("✅ Token minted", mint_token(&keypair, &mint_keypair, &associated_account_address, amount * 100));
 
     let token_name = "Solana UA Bootcamp 2025-03-19";
-    let token_symbol = "UAB-3";
+    let token_symbol = "UAB-3 2022";
     let metadata_uri = "https://teal-naval-condor-252.mypinata.cloud/ipfs/bafkreihmpu246n7gc3dajv6bsavc2qggxqi5a65gra7irrbav6qpg5woge";
 
     process_transaction_result("✅ Token metadata account created", create_token_metadata_account(&keypair, &mint_keypair.pubkey(), token_name, token_symbol, metadata_uri));
